@@ -1,0 +1,61 @@
+  Caption = 'Vendor Number';
+            TableRelation = Vendor;
+
+            trigger OnValidate()
+            var
+                Vendortable: Record Vendor;
+            begin
+                Vendortable.Reset();
+                if Vendortable.Get("Vendor Number.") then begin
+                    Validate("Vendor Name", Vendortable.Name);
+                    Validate(City, Vendortable.city);
+                    Validate(Address, Vendortable.address);
+                    Validate(Contact, Vendortable.Contact);
+                    Validate("Post Code", Vendortable."Post Code");
+                end
+            end;
+
+
+            OBJECT Codeunit 50000 MyCodeunit
+{
+  OBJECT-PROPERTIES
+  {
+    Date=05/06/2023;
+    Time=15:30:00;
+    Modified=Yes;
+    Version List=NAV 2018;
+  }
+  PROPERTIES
+  {
+    DataPerCompany = No;
+    OnRun = BEGIN
+      MESSAGE('Hello, this is my first Codeunit in Dynamics NAV!', 'Welcome');
+    END;
+  }
+
+  CODE
+  {
+    PROCEDURE MyFunction@1(VAR MyParameter@1: Text[100]): Text[100];
+    BEGIN
+      MyParameter := 'Hello ' + MyParameter;
+      EXIT(MyParameter);
+    END;
+
+    LOCAL PROCEDURE MyLocalProcedure@2(VAR MyText@1: Text[100]);
+    BEGIN
+      MyText := 'This is a local procedure. ' + MyText;
+    END;
+  }
+}
+
+NoSeriesMgt: Codeunit NoSeriesManagement;
+ตัวอย่างการใช้
+    procedure AssistEdit(OldPacking: Record "Packing"): Boolean
+    begin
+        JintanaSetup.GET();
+        JintanaSetup.TestField("Barcode No.");
+        IF NoSeriesMgt.SelectSeries(JintanaSetup."Barcode No.", OldPacking."No. Series", "No. Series") THEN BEGIN
+            NoSeriesMgt.SetSeries("No.");
+            EXIT(TRUE);
+        END;
+    end;
